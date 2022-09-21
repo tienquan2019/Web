@@ -5,24 +5,24 @@ LANG=en_US.UTF-8
 panelPort="7800"
 
 if [ $(whoami) != "root" ]; then
-    echo "Please use the [root] user to execute the Qpanel installation script!"
+    echo "Please use the [root] user to execute the zpanel installation script!"
     exit 1
 fi
 
 is64bit=$(getconf LONG_BIT)
 if [ "${is64bit}" != '64' ]; then
-    Red_Error "Sorry, Qpanel does not support 32-bit systems"
+    Red_Error "Sorry, zPanel does not support 32-bit systems"
 fi
 
 Centos6Check=$(cat /etc/redhat-release | grep ' 6.' | grep -iE 'centos|Red Hat')
 if [ "${Centos6Check}" ]; then
-    echo "Sorry, Centos6 does not support installing QPanel"
+    echo "Sorry, Centos6 does not support installing zPanel"
     exit 1
 fi
 
 UbuntuCheck=$(cat /etc/issue | grep Ubuntu | awk '{print $2}' | cut -f 1 -d '.')
 if [ "${UbuntuCheck}" -lt "16" ]; then
-    echo "Ubuntu ${UbuntuCheck} is not supported to the Qpanel, it is recommended to replace the Ubuntu18/20 to install"
+    echo "Ubuntu ${UbuntuCheck} is not supported to the zPanel, it is recommended to replace the Ubuntu18/20 to install"
     exit 1
 fi
 
@@ -48,7 +48,7 @@ GetSysInfo() {
     echo -e ${SYS_VERSION}
     echo -e Bit:${SYS_BIT} Mem:${MEM_TOTAL}M Core:${CPU_INFO}
     echo -e ${SYS_INFO}
-    echo -e "Please screenshot the above error message and post to the forum forum.Qpanel.cc for help"
+    echo -e "Please screenshot the above error message and post to the forum forum.zpanel.cc for help"
 }
 Red_Error() {
     echo '================================================='
@@ -70,7 +70,7 @@ Install_Check() {
         return
     fi
     echo -e "----------------------------------------------------"
-    echo -e "Web service is alreday installed,installing Qpanel may affect existing sites."
+    echo -e "Web service is alreday installed,installing zPanel may affect existing sites."
     echo -e "----------------------------------------------------"
     echo -e "Enter [yes] to force installation"
     read -p "Enter yes to force installation: " yes
@@ -741,7 +741,7 @@ Set_Firewall() {
 }
 Get_Ip_Address() {
     getIpAddress=""
-    getIpAddress=$(curl -sS --connect-timeout 10 -m 60 http://api.Qpanel.cc/en/getIpAddress)
+    getIpAddress=$(curl -sS --connect-timeout 10 -m 60 http://api.zpanel.cc/en/getIpAddress)
 
     ipv4Check=$($python_bin -c "import re; print(re.match('^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$','${getIpAddress}'))")
     if [ "${ipv4Check}" == "None" ]; then
@@ -793,16 +793,16 @@ Install_Main() {
 
 echo "
 +----------------------------------------------------------------------
-| Qpanel 6.x FOR CentOS/Ubuntu/Debian
+| zPanel 6.x FOR CentOS/Ubuntu/Debian
 +----------------------------------------------------------------------
-| Copyright © 2015-2099 BT-SOFT(http://Qpanel.cc) All rights reserved.
+| Copyright © 2015-2099 BT-SOFT(http://zpanel.cc) All rights reserved.
 +----------------------------------------------------------------------
 | The WebPanel URL will be http://SERVER_IP:$panelPort when installed.
 +----------------------------------------------------------------------
 "
 
 while [ "$go" != 'y' ] && [ "$go" != 'n' ]; do
-    read -p "Bạn có muốn cài đặt Qpanel vào thư mục $setup_path không?(y/n): " go
+    read -p "Bạn có muốn cài đặt zPanel vào thư mục $setup_path không?(y/n): " go
 done
 
 if [ "$go" == 'n' ]; then
@@ -814,7 +814,7 @@ intenal_ip=$(ip addr | grep -E -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3
 echo -e "=================================================================="
 echo -e "\033[32mXin chúc mừng! Cài đặt thành công!\033[0m"
 echo -e "=================================================================="
-echo "Internet Address: http://${intenal_ip}:${panelPort}$auth_path"
+echo "Internet Address: http://${getIpAddress}:${panelPort}$auth_path"
 echo "Internal Address: http://${intenal_ip}:${panelPort}$auth_path"
 echo -e "username: $username"
 echo -e "password: $password"
